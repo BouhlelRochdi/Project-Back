@@ -3,7 +3,7 @@ const schema = mongoose.Schema;
 
 const tagSchema = new schema({
     name: String,
-    description : String
+    description: String
 });
 
 
