@@ -11,7 +11,7 @@ router.get('/company', async (req, res) => {
 
 //get with Populate
 router.get('/fullCompany', async (req, res) => {
-    const eventCompany = await companySchema.populate(); //afficher avec les event associer
+    const eventCompany = await companySchema.populate('events'); //afficher avec les event associer
     res.json(eventCompany);
 });
 
