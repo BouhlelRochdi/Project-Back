@@ -8,6 +8,7 @@ const port = 3000;
 const company = require('./models/companySchema');
 const tags = require('./models/tagSchema');
 const events = require('./models/eventSchema');
+const register = require('./routes/register');
 
 
 // config
@@ -29,6 +30,7 @@ app.get('/', (req, res) => {
 app.use('/api', company);
 app.use('/api', events);
 app.use('/api', tags);
+app.use('/api', register);
 
 
 
