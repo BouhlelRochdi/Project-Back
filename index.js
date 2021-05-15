@@ -9,6 +9,7 @@ const register = require('./routes/register');
 const company = require('./routes/company');
 const events = require('./routes/events');
 const tags = require('./routes/tags');
+const login = require('./routes/login');
 
 
 // config
@@ -31,6 +32,7 @@ app.use('/api', company);
 app.use('/api', events);
 app.use('/api', tags);
 app.use('/api', register);
+app.use('/api', login);
 
 
 
