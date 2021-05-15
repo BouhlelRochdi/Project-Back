@@ -5,10 +5,10 @@ const morgan = require('morgan');
 const connect = require('./db/connect')
 const app = express();
 const port = 3000;
-const company = require('./models/companySchema');
-const tags = require('./models/tagSchema');
-const events = require('./models/eventSchema');
 const register = require('./routes/register');
+const company = require('./routes/company');
+const events = require('./routes/events');
+const tags = require('./routes/tags');
 
 
 // config
