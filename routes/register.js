@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt');
 router.post('/register', async (req, res) => {
     const company = await companySchema.findOne({ email : req.body.email });
     if (company) {
-        res.json({ message: "==> email existant"});
+        res.status(400).json({ message: "==> email existant"});
     }
     else{
         try{
@@ -15,7 +15,7 @@ router.post('/register', async (req, res) => {
             const hash = await bcrypt.hashSync(req.body.password, salt);
             req.body.password = hash;
             const addCompany = await companySchema.create(req.body);
-            res.json(addCompany);
+            res.json({ message: 'Registred successfuly'});
         }
         catch (error){
             console.log(error);
