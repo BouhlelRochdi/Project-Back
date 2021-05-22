@@ -5,11 +5,11 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 
-router.get('/login', async (req, res) => {
+router.post('/login', async (req, res) => {
     try {
         const company = await companySchema.findOne({ email: req.body.email })
         if (company === null) {
-            res.json({ message: 'Non enregistrer .. email nexiste pas!' })
+            res.status(400).json({ message: 'Non enregistrer .. email nexiste pas!' })
         }
         else {
             const check = await bcrypt.compare(req.body.password, company.password); // comparer les deux pwd bcrypt.compare(pwd nn crypter de la requete, pwd crypter enregistrer)
@@ -27,7 +27,7 @@ router.get('/login', async (req, res) => {
         }
     }
     catch (error) {
-        res.status(500).json({ message: 'internal server error!' });
+        res.status(500).json({ message: 'internal server error!', error });
     }
 })
 
