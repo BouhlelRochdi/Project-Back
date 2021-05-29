@@ -22,7 +22,7 @@ router.post('/login', async (req, res) => {
                 res.json({ message: 'Welcome .. successfully connected', token: jeton });
             }
             else {
-                res.json({ message: 'Please verify your Password' });
+                res.status(400).json({ message: 'Please verify your Password' });
             }
         }
     }
