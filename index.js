@@ -3,6 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const connect = require('./db/connect')
+const strategy = require('./passport/passport');
 const app = express();
 const port = 3000;
 const register = require('./routes/register');
@@ -10,6 +11,8 @@ const company = require('./routes/company');
 const events = require('./routes/events');
 const tags = require('./routes/tags');
 const login = require('./routes/login');
+const token = require('./routes/tokenApi');
+const resetPasswordMail = require('./routes/resetPwd');
 
 
 // config
@@ -33,6 +36,8 @@ app.use('/api', events);
 app.use('/api', tags);
 app.use('/api', register);
 app.use('/api', login);
+app.use('/api', token);
+app.use('/api', resetPasswordMail);
 
 
 
