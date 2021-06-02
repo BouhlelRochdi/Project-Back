@@ -18,7 +18,7 @@ router.post('/login', async (req, res) => {
                     id : company._id,
                     email : company.email
                 } // ces les infos qu'on veut transferer avec le jwt
-                const jeton = jwt.sign(tokenData, 'key'); // creation du jeton avec tokenData et une clé privée
+                const jeton = jwt.sign(tokenData, 'key', {expiresIn : '1d'}); // creation du jeton avec tokenData et une clé privée
                 res.json({ message: 'Welcome .. successfully connected', token: jeton });
             }
             else {

@@ -12,7 +12,7 @@ const events = require('./routes/events');
 const tags = require('./routes/tags');
 const login = require('./routes/login');
 const token = require('./routes/tokenApi');
-const resetPasswordMail = require('./routes/resetPwd');
+const resetPassword = require('./routes/resetPwd');
 
 
 // config
@@ -37,7 +37,7 @@ app.use('/api', tags);
 app.use('/api', register);
 app.use('/api', login);
 app.use('/api', token);
-app.use('/api', resetPasswordMail);
+app.use('/api', resetPassword);
 
 
 
