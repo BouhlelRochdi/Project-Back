@@ -28,7 +28,7 @@ router.post('/reset-password', async (req, res) => {
         const tokenExsit = await tokenSchema.findOne({token: req.body.token}).populate('company');
         if (tokenExsit){
             // const company = await companySchema.findById(tokenExsit.companyId);
-            
+
             // hash  the password 
             const salt = await bcrypt.genSalt(10);
             const hash = await bcrypt.hashSync(req.body.password, salt);
@@ -75,9 +75,9 @@ router.post('/forgot-password', async (req, res) => {
                 };
 
                 const template = fs.readFileSync(path.resolve('./mailTemplates', 'resetPwdMail.html'),{encoding: 'utf-8'});
-                console.log(template);
+                // console.log(template);
                 const html = ejs.render(template, messageParameters);
-                console.log(html);
+                // console.log(html);
                 // send email with the new token
                 const message = {
                     from: 'zlatanbouhlel@gmail.com', // sender address
