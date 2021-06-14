@@ -12,7 +12,7 @@ router.get('/tags', async (req, res) => {
 //Find One By ID
 router.get('/tags/:id', async (req, res) => {
     // const tags = await tagSchema.findOne({ id: req.params.id}); the same result with other way
-    const tagSchema = await tagSchema.findById(req.params.id);
+    const tags = await tagSchema.findById(req.params.id);
     res.json(tags);
 })
 
