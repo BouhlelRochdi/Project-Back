@@ -10,6 +10,10 @@ const companySchema = new schema({
     role: String,
     photo: String,
     events: [{ type: Schema.Types.ObjectId, ref: 'event' }]
+},
+{
+    timestamps: true,
+    versionKey: false
 });
 
 
