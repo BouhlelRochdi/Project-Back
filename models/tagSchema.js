@@ -4,6 +4,10 @@ const schema = mongoose.Schema;
 const tagSchema = new schema({
     name: String,
     description: String
+},
+{
+    timestamps: true,
+    versionKey: false
 });
 
 

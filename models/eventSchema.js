@@ -15,6 +15,10 @@ const eventSchema = new schema({
     eventType: String,
     location: String,
     tags: [{ type: Schema.Types.ObjectId, ref: 'tags' }]
+},
+{
+    timestamps: true,
+    versionKey: false
 });
 
 

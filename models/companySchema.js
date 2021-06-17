@@ -7,9 +7,13 @@ const companySchema = new schema({
     description : String,
     email: String,
     password: String,
-    role: String,
+    role: {type : String, default : 'admin'},
     photo: String,
     events: [{ type: Schema.Types.ObjectId, ref: 'event' }]
+},
+{
+    timestamps: true,
+    versionKey: false
 });
 
 
