@@ -6,7 +6,7 @@ const passport = require('passport');
 
 router.get('/company', passport.authenticate('bearer', {session : false}), async (req, res) => {
     const company = await companySchema.find();
-    res.json(company);
+    res.status(200).json(company);
 });
 
 
@@ -21,13 +21,13 @@ router.get('/fullCompany', passport.authenticate('bearer', {session : false}), a
 router.get('/company/:id', passport.authenticate('bearer', {session : false}), async (req, res) => {
     // const company = await companySchema.findOne({ id: req.params.id}); the same result with other way
     const company = await companySchema.findById(req.params.id);
-    res.json(company);
+    res.status(200).json(company);
 })
 
 
 router.post('/company', passport.authenticate('bearer', {session : false}), async (req, res) => {
     const company = await companySchema.create(req.body);
-    res.json(company);
+    res.status(200).json(company);
 });
 
 

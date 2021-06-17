@@ -1,11 +1,12 @@
 const express = require('express');
+const { findOneAndUpdate } = require('../models/eventSchema');
 const eventSchema = require('../models/eventSchema');
 const router = express.Router();
 
 
 router.get('/events', async (req, res) => {
     const events = await eventSchema.find();
-    res.json(events);
+    res.status(200).json(events);
 });
 
 
@@ -19,6 +20,12 @@ router.get('/events/:id', async (req, res) => {
 
 router.post('/events', async (req, res) => {
     const events = await eventSchema.create(req.body);
+    res.json(events);
+});
+
+
+router.post('/events', async (req, res) => {
+    const events = await eventSchema.findOneAndUpdate(req.body);
     res.json(events);
 });
 
