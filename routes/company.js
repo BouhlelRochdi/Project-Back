@@ -26,12 +26,20 @@ function fileFilterFn (req, file, cb) {
   }
 
 //   
-const uploads = multer({ storage : myStorage, fileFilter : fileFilterFn}); 
+const uploads = multer({ storage : myStorage, fileFilter : fileFilterFn, limits: { fieldSize: 8 * 1024 * 1024 }
+}); 
 
 
+// Get All Company
 router.get('/company', passport.authenticate('bearer', {session : false}), async (req, res) => {
-    const company = await companySchema.find();
-    res.status(200).json(company);
+    if(req.user.role == 'superAdmin')
+    {
+        const company = await companySchema.find();
+        res.status(200).json(company);
+    }
+    else{
+        res.status(200).json([req.user]);
+    }
 });
 
 
@@ -62,7 +70,7 @@ router.post('/company', [passport.authenticate('bearer', {session : false}), upl
 router.post('/createCompany',[passport.authenticate('bearer', {session : false}), uploads.single('photo')] ,async (req, res) => {
     const company = await companySchema.findOne({ email : req.body.email });
     if (company) {
-        res.status(400).json({ message: "==> email existant"});
+        res.status(400).json({ message: "Email already exist"});
     }
     else{
         try{
@@ -83,6 +91,7 @@ router.post('/createCompany',[passport.authenticate('bearer', {session : false})
 })
 
 
+// Find by id and Update
 router.put('/company/:id', [passport.authenticate('bearer', {session : false}), uploads.single('photo')], async (req, res) => {
     if( req.file !== undefined){
         req.body.photo = req.file.filename;
@@ -92,10 +101,15 @@ router.put('/company/:id', [passport.authenticate('bearer', {session : false}), 
 });
 
 
+// Delete Company
 router.delete('/company/:id', passport.authenticate('bearer', {session : false}), async (req, res) => {
     const company = await companySchema.findByIdAndDelete(req.params.id);
     res.json({ message: `The company ${company.name} deleted successfully!` });
 });
+
+
+// Find out role and determinate display
+
 
 
 module.exports = router;
