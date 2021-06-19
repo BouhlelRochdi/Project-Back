@@ -8,7 +8,7 @@ const path = require('path');
 // start upload image API
 const myStorage = multer.diskStorage({
     destination: (req, file, callback) => {
-        const destFile = path.resolve('./uploads');
+        const destFile = path.resolve('./uploads/Events');
         callback(null, destFile);
     }, 
     filename: (req, file, callback) => {
