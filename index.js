@@ -13,6 +13,7 @@ const tags = require('./routes/tags');
 const login = require('./routes/login');
 const token = require('./routes/tokenApi');
 const resetPassword = require('./routes/resetPwd');
+const home = require('./routes/home');
 
 
 // config
@@ -38,6 +39,7 @@ app.use('/api', register);
 app.use('/api', login);
 app.use('/api', token);
 app.use('/api', resetPassword);
+app.use('/api', home)
 
 
 
