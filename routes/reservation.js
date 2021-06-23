@@ -27,7 +27,7 @@ router.post('/reservation/:id', async (req, res) => {
             const user = await userSchema.create(req.body.user);
             console.log(user);
 
-            const data = {
+            const qrCodeData = {
                 name: user.fName + user.lName,
                 email: user.email,
                 eventName: events.name,
@@ -35,28 +35,32 @@ router.post('/reservation/:id', async (req, res) => {
                 endDate: events.endDate,
                 startTime: events.startTime,
                 endTime: events.endTime,
-                avaialbleTickets: events.availableTicketNumber,
                 location: events.location
-            }
+            };
+
             // 2. pour chaue reservation 
             // create QR code 
 
-            // const qrImg = qrCode.toFile(
-            //     './uploads/QRCodes/QR' + Date.now() + '.png',
-            //     [{ data: Buffer.from([253, 254, 255]), mode: 'byte' }], {
-            //     type: 'png',
-            //     width: 200,
-            //     errorCorrectionLevel: 'H'
-            // });
+           await qrCode.toFile('./uploads/QRCodes/' + user._id+ '.png',
+            JSON.stringify(qrCodeData), {
+                type: 'png',
+                width: 200,
+                errorCorrectionLevel: 'H'
+            });
 
             // create PDF ticket 
-            // const  messageParameters = {
-            //     userName : user.fName, 
-            //     link: `http://localhost:4200/#/`
-            // };
+            const  pdfParameters = {
+                userName : user.fName,
+                startDate: events.startDate,
+                startTime: events.startTime,
+                endDate: events.endDate,
+                endTime: events.endTime,
+                location: events.location
+            };
 
-            // const template = fs.readFileSync(path.resolve('./mailTemplates', 'reservation.html'),{encoding: 'utf-8'});
-            // const html = ejs.render(template, messageParameters);
+            const template = fs.readFileSync(path.resolve('./mailTemplates', 'reservation.html'),{encoding: 'utf-8'});
+            const html = ejs.render(template, pdfParameters);
+            console.log(html);
 
             // const data = {
             //     html: html,
@@ -98,13 +102,13 @@ router.post('/reservation/:id', async (req, res) => {
             //     }
             // });
             // send email 
-            
+
             // envoyer ticket via email 
-            
-            
+
+
 
             // diminuer le nombre de ticket
-            
+
             // 3. response 
             res.status(200).json({ message: 'Ckeck your mail!' });
         } catch (err) {
