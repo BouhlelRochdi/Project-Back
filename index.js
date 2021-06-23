@@ -14,7 +14,11 @@ const login = require('./routes/login');
 const token = require('./routes/tokenApi');
 const resetPassword = require('./routes/resetPwd');
 const home = require('./routes/home');
+const dashboard = require('./routes/dashboardAPI');
+const reservation = require('./routes/reservation');
 
+// static folders
+app.use("/uploads", express.static(__dirname + '/uploads'));
 
 // config
 app.use(cors());
@@ -39,7 +43,9 @@ app.use('/api', register);
 app.use('/api', login);
 app.use('/api', token);
 app.use('/api', resetPassword);
-app.use('/api', home)
+app.use('/api', home);
+app.use('/api', dashboard);
+app.use('/api', reservation);
 
 
 
