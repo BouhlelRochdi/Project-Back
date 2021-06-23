@@ -74,9 +74,10 @@ router.put('/events/:id',[passport.authenticate('bearer', {session : false}), up
 
 
 router.delete('/events/:id', async (req, res) => {
+    //delete this event
     const events = await eventSchema.findByIdAndDelete(req.params.id);
     // we need to deleted also from the company ()
-    const deleteFromCompany = await companySchema.findByIdAndUpdate(req.user._id,{$pull:{events:events._id}},{new:true})
+    const deleteFromCompany = await companySchema.updateMany({},{$pull:{events: req.params.id}},{new:true, multi: true})
     res.status(200).json({ message: `The events ${events.name} deleted successfully!` });
 });
 
