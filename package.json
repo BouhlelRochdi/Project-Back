@@ -25,6 +25,8 @@
     "passport": "^0.4.1",
     "passport-http-bearer": "^1.0.1",
     "path": "^0.12.7",
+    "pdf-creator-node": "^2.2.2",
+    "qrcode": "^1.4.4",
     "randomstring": "^1.2.1"
   }
 }

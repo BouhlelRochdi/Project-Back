@@ -14,6 +14,7 @@ const eventSchema = new schema({
     availableTicketNumber: Number,
     eventType: String,
     location: String,
+    company: { type: Schema.Types.ObjectId, ref: 'company' },
     tags: [{ type: Schema.Types.ObjectId, ref: 'tags' }]
 },
 {

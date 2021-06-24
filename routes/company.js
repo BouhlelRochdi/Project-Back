@@ -8,7 +8,7 @@ const bcrypt = require('bcrypt');
 
 const myStorage = multer.diskStorage({
     destination: (req, file, callback) => {
-        const destFile = path.resolve('./uploads');
+        const destFile = path.resolve('./uploads/Companys');
         callback(null, destFile);
     }, 
     filename: (req, file, callback) => {
@@ -95,6 +95,16 @@ router.post('/createCompany',[passport.authenticate('bearer', {session : false})
 router.put('/company/:id', [passport.authenticate('bearer', {session : false}), uploads.single('photo')], async (req, res) => {
     if( req.file !== undefined){
         req.body.photo = req.file.filename;
+    }
+    // extract current company 
+    const consultCompany = await companySchema.findById(req.params.id);
+    // verify if password has been modified or not
+    if(req.body.password != consultCompany.password){
+        // if it been modified then porsuit to crypted it
+        const salt = await bcrypt.genSalt(10);
+        const hash = await bcrypt.hashSync(req.body.password, salt);
+        // the old password need to be replace with the new one
+        req.body.password = hash;
     }
     const company = await companySchema.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.json(company);

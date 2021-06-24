@@ -1,5 +1,6 @@
 const express = require('express');
 const eventSchema = require('../models/eventSchema');
+const companySchema = require('../models/companySchema');
 const router = express.Router();
 const passport = require('passport');
 const multer = require('multer')
@@ -8,7 +9,7 @@ const path = require('path');
 // start upload image API
 const myStorage = multer.diskStorage({
     destination: (req, file, callback) => {
-        const destFile = path.resolve('./uploads');
+        const destFile = path.resolve('./uploads/Events');
         callback(null, destFile);
     }, 
     filename: (req, file, callback) => {
@@ -30,8 +31,15 @@ const uploads = multer({ storage : myStorage, fileFilter : fileFilterFn});
 
 
 router.get('/events',passport.authenticate('bearer', {session : false}), async (req, res) => {
-    const events = await eventSchema.find();
-    res.status(200).json(events);
+    if (req.user.role == "superAdmin"){
+        // if user is superAdmin he have all Events
+        const events = await eventSchema.find();
+        res.status(200).json(events);
+    }else {
+        // else show the user(which is only admin) only his events
+        const events = await eventSchema.find({company: req.user._id});
+        res.status(200).json(events);
+    }
 });
 
 
@@ -47,8 +55,12 @@ router.post('/events', [passport.authenticate('bearer', {session : false}), uplo
     if( req.file !== undefined){
         req.body.photo = req.file.filename;
     }
-    const events = await eventSchema.create(req.body);
-    res.json(events);
+    // affect current companyId to this event
+    req.body.company = req.user._id;
+    const event = await eventSchema.create(req.body);
+    //affect event to connected company (current Company)
+    await companySchema.findByIdAndUpdate(req.user._id, {$push:{events : event._id}}, {new: true});
+    res.json(event);
 });
 
 
@@ -62,7 +74,10 @@ router.put('/events/:id',[passport.authenticate('bearer', {session : false}), up
 
 
 router.delete('/events/:id', async (req, res) => {
+    //delete this event
     const events = await eventSchema.findByIdAndDelete(req.params.id);
+    // we need to deleted also from the company ()
+    const deleteFromCompany = await companySchema.updateMany({},{$pull:{events: req.params.id}},{new:true, multi: true})
     res.status(200).json({ message: `The events ${events.name} deleted successfully!` });
 });
 
