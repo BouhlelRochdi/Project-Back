@@ -39,82 +39,79 @@ router.post('/reservation/:id', async (req, res) => {
             };
 
             // 2. pour chaue reservation 
-            // create QR code 
+            // 2.1 create QR code 
 
-           await qrCode.toFile('./uploads/QRCodes/' + user._id+ '.png',
-            JSON.stringify(qrCodeData), {
+            await qrCode.toFile('./uploads/QRCodes/' + user._id + '.png',
+                JSON.stringify(qrCodeData), {
                 type: 'png',
                 width: 200,
                 errorCorrectionLevel: 'H'
             });
 
-            // create PDF ticket 
-            const  pdfParameters = {
-                userName : user.fName,
-                startDate: events.startDate,
+            // create PDF ticket **********************************
+            // convert
+            const eventStartDate = `${new Date(events.startDate).getDate()}/${new Date(events.startDate).getMonth()}/${new Date(events.startDate).getFullYear()}`;
+            const eventEndDate = `${new Date(events.endDate).getDate()}/${new Date(events.endDate).getMonth()}/${new Date(events.endDate).getFullYear()}`;
+            // PDF Parameters
+            // All what we need to display in the QRCode
+            const pdfParameters = {
+                userName: user.fName,
+                eventName: events.name,
+                startDate: eventStartDate,
                 startTime: events.startTime,
-                endDate: events.endDate,
+                endDate: eventEndDate,
                 endTime: events.endTime,
-                location: events.location
+                location: events.location,
+                qrCodeLink: `http://localhost:3000/uploads/QRCodes/${user._id}.png`
             };
 
-            const template = fs.readFileSync(path.resolve('./mailTemplates', 'reservation.html'),{encoding: 'utf-8'});
-            const html = ejs.render(template, pdfParameters);
-            console.log(html);
+            // Create File HTML and render it (then this will be convert to pdf)
+            const pdfTemplate = fs.readFileSync(path.resolve('./mailTemplates', 'reservation.html'), { encoding: 'utf-8' });
+            const htmlToConvert = ejs.render(pdfTemplate, pdfParameters);
+            // Data to send to pdf file
+            const pdfData = {
+                html: htmlToConvert,
+                data: {},
+                path: "./uploads/Reservations/"+user._id+".pdf",
+                type: "",
+            };
+            // Pdf options
+            let pdfOptions = {
+                "height": "11.25in",
+                "width": "8.5in",
+                "header": {
+                    "height": "20mm"
+                },
+                "footer": {
+                    "height": "20mm",
+                },
+            };
 
-            // const data = {
-            //     html: html,
-            //     data: {
-            //     //   users: users,
-            //     },
-            //     path: "./mailTemplates/Reservations",
-            //     type: "",
-            //   };
-            // let options = {
-            //     "height": "11.25in",
-            //     "width": "8.5in",
-            //     "header": {
-            //         "height": "20mm"
-            //     },
-            //     "footer": {
-            //         "height": "20mm",
-            //     },
-            // };
-
-            // pdf.create(data, options).toFile("reservation.pdf", (err, res) => {
-            //     if (err) {
-            //         res.status(400).json({message : err});
-            //     } else {
-
-            //         const message = {
-            //             from: 'FivePoints@gmail.com', // sender address
-            //             to: 'rochdi.bouhlel@hotmail.fr', //user.email, // list of receivers
-            //             subject: "Confirmation reservation", // Subject line
-            //             // html: PDF // html body
-            //         };
-            //         transport.sendMail(message,  (err, info) => {
-            //             if (err) {
-            //                 console.log(err)
-            //             } else {
-            //                 res.status(200).json({ message: 'Mail has been sent', info });
-            //             }
-            //         });
-            //     }
-            // });
             // send email 
 
             // envoyer ticket via email 
 
+            pdf.create(pdfData, pdfOptions).then( async (pdfCreated) => {
 
-
+                    const message = {
+                        from: 'FivePoints@gmail.com', // sender address
+                        to: 'rochdi.bouhlel@hotmail.fr', //user.email, // list of receivers
+                        subject: "Confirmation reservation", // Subject line
+                        html: '<h1>Get ticket</h1>', // html body
+                        attachments: [{ // we send the file as an attachment not as html file us usually
+                                filename: 'Ticket.pdf',
+                                content: fs.createReadStream(pdfData.path)
+                        }]
+                    };
+                    await transport.sendMail(message);
+                res.status(200).json({ message: 'Ckeck your mail!' });
+            });
             // diminuer le nombre de ticket
-
+            await eventSchema.findByIdAndUpdate(req.params.id, { $inc: { availableTicketNumber: -1} }, {new: true});
             // 3. response 
-            res.status(200).json({ message: 'Ckeck your mail!' });
         } catch (err) {
             console.log(err)
         }
-        // res.json(events);
     }
 });
 
