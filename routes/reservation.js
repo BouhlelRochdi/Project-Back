@@ -21,6 +21,8 @@ router.post('/reservation/:id', async (req, res) => {
     const events = await eventSchema.findById(req.params.id);
     if (events.availableTicketNumber <= 0 && req.body.reservations.length + 1 <= events.availableTicketNumber) {
         res.status(400).json({ message: 'all tickets are solded' });
+    } else if(req.body.reservations.length + 1 > events.availableTicketNumber){
+        res.status(400).json({ message : 'there is no more tickets ..' });        
     } else {
         try {
             // 1. ceation des reservations
