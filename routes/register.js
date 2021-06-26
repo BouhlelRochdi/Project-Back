@@ -45,7 +45,6 @@ router.post('/register', uploads.single('photo'), async (req, res) => {
             res.json({ message: 'Registred successfuly'});
         }
         catch (error){
-            console.log(error);
             res.status(500).json({ message: "internal server error"});
         }
     }
