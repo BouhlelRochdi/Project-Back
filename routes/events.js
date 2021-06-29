@@ -52,15 +52,19 @@ router.get('/events/:id',passport.authenticate('bearer', {session : false}), asy
 
 
 router.post('/events', [passport.authenticate('bearer', {session : false}), uploads.single('photo')], async (req, res) => {
-    if( req.file !== undefined){
-        req.body.photo = req.file.filename;
+    try{
+        if( req.file !== undefined){
+            req.body.photo = req.file.filename;
+        }
+        // affect current companyId to this event
+        req.body.company = req.user._id;
+        const event = await eventSchema.create(req.body);
+        //affect event to connected company (current Company)
+        await companySchema.findByIdAndUpdate(req.user._id, {$push:{events : event._id}}, {new: true});
+        res.json(event);
+    }catch(error){
+        res.status(400).json({ message : error});
     }
-    // affect current companyId to this event
-    req.body.company = req.user._id;
-    const event = await eventSchema.create(req.body);
-    //affect event to connected company (current Company)
-    await companySchema.findByIdAndUpdate(req.user._id, {$push:{events : event._id}}, {new: true});
-    res.json(event);
 });
 
 
