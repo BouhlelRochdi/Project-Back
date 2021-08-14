@@ -1,20 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Days+One&display=swap" rel="stylesheet">
+
     <title></title>
     <style>
         /* design here */
+        @import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            justify-content: space-between;
+            -webkit-align-items: center;
+            align-items: center;
+            flex-grow: 2;
+            background-color: #424242;
+            padding: 20px;
+            margin-top: 20px;
+            height: 550px;
+        }
+
+        .qrcode {
+            -webkit-display: flex;
+            -webkit-justify-content: center;
+            -webkit-align-items: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     </style>
 </head>
+
 <body>
-    <h1>Bonjour <%= userName %> ,</h1>
-    <p>Vous avez participer à l'evennement nomé : <%= eventName %>.</p>
-    <p>Votre programme commencera le <%= startDate %> à <%= startTime %> et finira le <%= endDate %> à <%= endTime %>.</p>
-    <p>Lieu : <%= location %></p>
-    <p>Ne ratez pas l'occasion, pour plus d'info veillez consulter votre QR code.</p>
-    <img src="<%= qrCodeLink %>" alt ="qrCode">
+    <div class="container">
+        <h1>Bonjour <%= userName %> ,</h1>
+        <p>Vous avez participer à l'evennement nomé : <%= eventName %>.</p>
+        <p>Votre programme commencera le <%= startDate %> à <%= startTime %> et finira le <%= endDate %> à <%= endTime
+                            %>.
+        </p>
+        <p>Lieu : <%= location %>
+        </p>
+        <p>Ne ratez pas l'occasion, pour plus d'info veillez consulter votre QR code.</p>
+        <div class="qrcode">
+            <img src="<%= qrCodeLink %>" alt="qrCode">
+        </div>
+    </div>
+
+
 </body>
+
 </html>
